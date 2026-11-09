@@ -5,7 +5,7 @@ FINITE ELEMENT ANALYSIS OF A THREE-NODE SPRING SYSTEM
 
 Problem description:
 --------------------
-Consider three nodes connected by three two springs:
+Consider three nodes connected by two springs:
 
     Node 0 --^^^^-- Node 1 --^^^^-- Node 2
               k1              k2
