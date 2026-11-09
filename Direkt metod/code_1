@@ -34,6 +34,9 @@ Units:
 Applied nodal forces:
     F = [0, 100, 0] N
 
+** these are external forces. We consider 0 even for the nodes where the displacement is given as boundary condition. 
+**The reaction forces at these nodes with known boundary conditions will be calculated at the end.
+
 Boundary conditions:
     Node 0: prescribed displacement u0 = 0 mm
     Node 1: free displacement
