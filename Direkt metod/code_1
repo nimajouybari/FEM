@@ -1,0 +1,129 @@
+"""
+=========================================================
+FINITE ELEMENT ANALYSIS OF A THREE-NODE SPRING SYSTEM
+=========================================================
+
+Problem description:
+--------------------
+Consider three nodes connected by three linear springs:
+
+    Node 0 -------- Node 1 -------- Node 2
+        k1              k2
+
+The global stiffness matrix is assembled and given below.
+
+The objective is to calculate the unknown nodal displacements
+and support reaction forces using the partitioning method.
+
+Assumed parameters:
+-------------------
+Global stiffness matrix:
+    K = [[ 10, -10,   0],
+         [-10,  20, -10],
+         [  0, -10,  10]]
+
+This corresponds to:
+    k1 = 10
+    k2 = 10
+
+Units:
+    Spring stiffness: N/mm
+    Force: N
+    Displacement: mm
+
+Applied nodal forces:
+    F = [0, 100, 0] N
+
+Boundary conditions:
+    Node 0: prescribed displacement u0 = 0 mm
+    Node 1: free displacement
+    Node 2: free displacement
+
+Unknowns to calculate:
+    Displacements: u1 and u2
+    Reaction force: R0
+
+Method:
+------
+1. Identify free and constrained DOFs.
+2. Partition the global stiffness matrix.
+3. Solve the reduced equilibrium equations.
+4. Reconstruct the complete displacement vector.
+5. Calculate support reaction forces.
+
+Note:
+-----
+Python uses zero-based indexing:
+    Index 0 corresponds to node 0.
+    Index 1 corresponds to node 1.
+    Index 2 corresponds to node 2.
+
+=========================================================
+"""
+
+import numpy as np
+
+# Global stiffness matrix
+K = np.array([
+    [ 10, -10,   0],
+    [-10,  20, -10],
+    [  0, -10,  10]
+], dtype=float)
+
+# Global force vector
+F = np.array([0, 100, 0], dtype=float)
+
+# Prescribed DOFs (zero-based indexing)
+constrained = [0]
+
+# Identify free DOFs automatically
+all_dofs = np.arange(len(F))
+free = np.setdiff1d(all_dofs, constrained)
+
+# Prescribed displacements
+u = np.zeros(len(F))
+u[constrained] = 0
+
+# Partitioning
+Kff = K[np.ix_(free, free)]
+Kfc = K[np.ix_(free, constrained)]
+
+Ff = F[free]
+
+# Print matrices
+print("\n--- Global System ---")
+print("Global stiffness matrix K:")
+print(K)
+
+print("\nGlobal force vector F:")
+print(F)
+
+print("\n--- DOF Partitioning ---")
+print("Free DOFs:", free)
+print("Constrained DOFs:", constrained)
+
+print("\nReduced stiffness matrix Kff:")
+print(Kff)
+
+print("\nCoupling stiffness matrix Kfc:")
+print(Kfc)
+
+# Solve reduced system
+uf = np.linalg.solve(
+    Kff,
+    Ff - Kfc @ u[constrained]
+)
+
+# Reconstruct displacement vector
+u[free] = uf
+
+# Calculate reactions
+R = K @ u - F
+
+# Print results
+print("\n--- Results ---")
+print("Displacement vector u:")
+print(u)
+
+print("\nReaction force vector R:")
+print(R)
