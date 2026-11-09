@@ -7,8 +7,8 @@ Problem description:
 --------------------
 Consider three nodes connected by three linear springs:
 
-    Node 0 -------- Node 1 -------- Node 2
-        k1              k2
+    Node 0 --^^^^-- Node 1 --^^^^-- Node 2
+              k1              k2
 
 The global stiffness matrix is assembled and given below.
 
